@@ -8,7 +8,7 @@ This project requires the following libraries:
 
 * OpenCv, which, if using Anaconda, must be installed from the conda-forge channel
 
-* [PyTorch](https://github.com/pytorch/pytorch#installation): Use the instructions for the right OS and install dependencies
+* [PyTorch](https://pytorch.org/get-started/locally/): Use the instructions for the right OS and install dependencies
 
 * The [Camera](https://github.com/cogworksbwsi/camera) package, following the installation instructions detailed on GitHub.
 
