@@ -2,7 +2,7 @@ import numpy as np
 import database
 from database import Profile
 
-database = Profile(fingerprints)
+db = database.default()
 matches = []
 
 def determine_match(fingerprints):
@@ -24,10 +24,10 @@ def determine_match(fingerprints):
     for i in range(len(fingerprints)):
         name_dists = []
         mean_dists = []
-        for name in database.default.keys():
+        for name in db.keys():
             dists = []
             # each name contains multiple fingerprints
-            for f in database.default[name]:
+            for f in db[name]:
                 # takes the cosine distances between input and database fingerprints for this name
                 diff = cosine_distance(fingerprints[i], f)
                 dists.append(diff)
