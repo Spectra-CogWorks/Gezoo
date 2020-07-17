@@ -12,10 +12,10 @@ setup(
     install_requires=[
         'click',
 		'pillow',
-		'mygrad'
-		'facenet-pytorch'
-		'mynn'
-		'numpy'
+		'mygrad',
+		'facenet-pytorch',
+		'mynn',
+		'numpy',
     ],
     entry_points='''
         [console_scripts]
