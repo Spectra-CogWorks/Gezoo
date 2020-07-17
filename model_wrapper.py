@@ -29,8 +29,8 @@ def feed_mtcnn(image, threshold=0.8):
 
   return boxes
 
-def compute_fingeprints(image, boxes):
-  """Fingeprint faces in `boxes` in `image`
+def compute_fingerprints(image, boxes):
+  """Fingerprint faces in `boxes` in `image`
 
   Parameters
   ----------

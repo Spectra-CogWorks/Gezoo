@@ -5,16 +5,16 @@ matches = []
 
 def determine_match(fingerprints):
     """
-	Parameter:
-	-----------
-	fingerprints: np.ndarray
-		A shape-(N, 512) array of fingerprints (or descriptor vectors) taken from N images.
+    Parameter:
+    -----------
+    fingerprints: np.ndarray
+        A shape-(N, 512) array of fingerprints (or descriptor vectors) taken from N images.
         	
-	Returns:
-	--------
-	matches: list
-		A list of the names whose fingerprints have the smallest cosine distance
-        to each input/new fingerprint, i.e. are the best matches.
+    Returns:
+    --------
+    matches: list
+        A list of the names whose fingerprints have the smallest cosine distance
+	to each input/new fingerprint, i.e. are the best matches.
     """
     # loops over all N fingerprints in the input array
     for i in range(len(fingerprints)):
@@ -40,18 +40,18 @@ def determine_match(fingerprints):
     return matches
 
 def cosine_distance(d1, d2):
-	"""
+    """
     Parameters:
     -----------
-	d1: np.ndarray
-		One of the two arrays you are finding the distance between.
+    d1: np.ndarray
+	One of the two arrays you are finding the distance between.
     
     d2: np.ndarray
         The second of the two arrays you are finding the distance between.
         	
-	Returns:
-	--------
-	float
+    Returns:
+    --------
+    float
         The cosine distance between the two arrays.
-	"""
+    """
     return 1 - (np.matmul(d1, d2))/(np.linalg.norm(d1)*np.linalg.norm(d2))
