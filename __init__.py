@@ -9,6 +9,7 @@ import determine_matches as dm
 import image_display as imd
 import whispers_algorithm as whisp
 import node as nd
+import camera as cam
 
 """
 Plan
@@ -26,7 +27,11 @@ def update(dbpath):
 		dbpath = Path(database)
 		database.set_path(dbpath)
 
+	img = cam.take_picture()
 	
+	boxes = mw.feed_mtcnn(img, threshold=probabilitythreshold) # ! Test for new threshold
+	
+	fingerprints = mw.compute_fingerprints(img, boxes)
 
 @ck.command()
 @ck.argument("filename", help="The path to the image that is to be analyzed")
