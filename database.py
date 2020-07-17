@@ -91,7 +91,7 @@ def save(database):
   global _default
   global _path
 
-  for name, profile in enumerate(database):
+  for name, profile in database.items():
     database[name] = profile.fingerprints
 
   _default = database
