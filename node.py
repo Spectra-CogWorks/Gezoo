@@ -2,7 +2,7 @@ class Node:
     """ Describes a node in a graph, and the edges connected
         to that node."""
 
-    def __init__(self, ID, neighbors, descriptor, truth=None, file_path=None):
+    def __init__(self, ID, neighbors, descriptor, truth=None, image=None):
         """ 
         Parameters
         ----------
@@ -40,7 +40,7 @@ class Node:
         self.descriptor = descriptor
 
         self.truth = truth
-        self.file_path = file_path
+        self.image = image
 
 
 def plot_graph(graph, adj):
