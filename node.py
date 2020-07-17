@@ -93,4 +93,5 @@ def plot_graph(graph, adj):
     fig, ax = plt.subplots()
     nx.draw_networkx_nodes(g, pos=pos, ax=ax, nodelist=range(len(graph)), node_color=colors)
     nx.draw_networkx_edges(g, pos, ax=ax, edgelist=g.edges())
+    plt.show()
     return fig, ax

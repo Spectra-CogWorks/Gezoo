@@ -16,6 +16,7 @@ setup(
 		'facenet-pytorch',
 		'mynn',
 		'numpy',
+		'networkx',
     ],
     entry_points='''
         [console_scripts]

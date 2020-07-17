@@ -9,10 +9,9 @@ import random
 import node as nd
 import model_wrapper as mw
 from determine_matches import cosine_distance
-import input
-from input import import_folder
+from camera_input import import_folder
 
-def create_graph(folder_path, threshold):
+def create_graph(folder_path, threshold=1):
     """
     Creates a list of nodes, imports images, and fills the nodes with their respective information
     
@@ -51,7 +50,7 @@ def create_graph(folder_path, threshold):
     return list_of_nodes        
 
 
-def whispers(graph, threshold, max_iterations, weighted_edges):
+def whispers(graph, threshold=1, max_iterations, weighted_edges):
     """
     Using the graph, creates an adjacency matrix which details a relationship between the nodes, aka "edges". 
 
@@ -72,7 +71,8 @@ def whispers(graph, threshold, max_iterations, weighted_edges):
     
     Returns
     -------
-    None
+    adj : np.ndarray-shape(len(graph), len(graph))
+        The adjacency matrix
     """
     # TODO Create a windowed average for the convergence check
     # Create the adjacency matrix
@@ -84,9 +84,8 @@ def whispers(graph, threshold, max_iterations, weighted_edges):
         for neighbor in node.neighbors:
             distance = cosine_distance(node.descriptor, graph[neighbor].descriptor)
             
-            if distance < threshold:
-                adjacency_matrix[node.ID, neighbor] = 1 / (distance ** 2) + 1 if weighted_edges else 1
-                adjacency_matrix[neighbor, node.ID] = 1 / (distance ** 2) + 1 if weighted_edges else 1
+            adjacency_matrix[node.ID, neighbor] = 1 / (distance ** 2) + 1 if weighted_edges else 1
+            adjacency_matrix[neighbor, node.ID] = 1 / (distance ** 2) + 1 if weighted_edges else 1
 
     # Selecting random node
     # Initializing label counts to be able to detect when convergence occurs (i.e. the number of labels stays the same)
@@ -137,3 +136,5 @@ def whispers(graph, threshold, max_iterations, weighted_edges):
                 break
                 
             past_labels = num_labels_count
+    
+    return adjacency_matrix
