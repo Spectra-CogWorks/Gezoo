@@ -68,7 +68,7 @@ def plot_graph(graph, adj):
     import matplotlib.pyplot as plt
 
     g = nx.Graph()
-    for n, node in enumerate(graph):
+    for n, node in enumerate(graph): # pylint: disable=unused-variable
         g.add_node(n)
 
     # construct a network-x graph from the adjacency matrix: a non-zero entry at adj[i, j]
@@ -85,7 +85,7 @@ def plot_graph(graph, adj):
     pos = nx.spring_layout(g)
 
     # make a mapping that maps: node-lab -> color, for each unique label in the graph
-    color = list(iter(cm.tab20b(np.linspace(0, 1, len(set(i.label for i in graph))))))
+    color = list(iter(cm.tab20b(np.linspace(0, 1, len(set(i.label for i in graph)))))) # pylint: disable=no-member
     color_map = dict(zip(sorted(set(i.label for i in graph)), color))
     colors = [color_map[i.label] for i in graph]  # the color for each node in the graph, according to the node's label
 
