@@ -5,7 +5,7 @@ from database import Profile
 db = database.default()
 matches = []
 
-def determine_match(fingerprints):
+def determine_match(fingerprints, threshold):
     """
     Determines the best match out of the names in the database for each input fingerprint.
     
@@ -13,6 +13,9 @@ def determine_match(fingerprints):
     -----------
     fingerprints: np.ndarray
         A shape-(N, 512) array of fingerprints (or descriptor vectors) taken from N images.
+        
+    threshold : float
+        The threshold value for standard deviations
         	
     Returns:
     --------
@@ -38,7 +41,7 @@ def determine_match(fingerprints):
             # appends mean distance for each name to "mean_dists"
             mean_dists.append(np.mean(dists))
         # appends the name with the lowest mean distance to list "matches" if it falls within 2 stds
-        if (min(just_dists) - np.mean(mean_dists)) <= 2 * np.std(mean_dists):
+        if (min(just_dists) - np.mean(mean_dists)) <= threshold * np.std(mean_dists):
             matches.append(name_dists[np.argmin(just_dists)][0])
         else:
             matches.append(None)

@@ -1,4 +1,4 @@
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Rectangle
 
@@ -27,4 +27,6 @@ def display_image(imgarray, boxes, names):
     for box, name in zip(boxes, names):
         ax.add_patch(Rectangle(box[:2], *(box[2:] - box[:2]), fill=None, lw=2, color="red"))
         plt.text(box[0], box[1], name, fontsize=28, color="green")
+        
+    plt.show(block=True)
     

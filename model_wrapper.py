@@ -19,6 +19,7 @@ def feed_mtcnn(image, threshold=0.8):
   boxes: np.ndarray
     A shape (N, 4) array for each box over the threshold
   """
+  # ! Please test to find a new threshold value
   global _model
 
   boxes, probabilities, _ = _model.detect(image)
@@ -35,7 +36,7 @@ def compute_fingerprints(image, boxes):
   Parameters
   ----------
   image: np.ndarray
-    Image to feed to MTCNN
+    Image to feed to InverseNet
 
   boxes: np.ndarray
     Boxes in the image
