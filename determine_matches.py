@@ -1,10 +1,14 @@
 import numpy as np
 import database
+fromn database import Profile
 
+database = Profile(fingerprints)
 matches = []
 
 def determine_match(fingerprints):
     """
+    Determines the best match out of the names in the database for each input fingerprint.
+    
     Parameter:
     -----------
     fingerprints: np.ndarray
@@ -20,10 +24,10 @@ def determine_match(fingerprints):
     for i in range(len(fingerprints)):
         name_dists = []
         mean_dists = []
-        for name in database.keys():
+        for name in database.default.keys():
             dists = []
             # each name contains multiple fingerprints
-            for f in database[name]:
+            for f in database.default[name]:
                 # takes the cosine distances between input and database fingerprints for this name
                 diff = cosine_distance(fingerprints[i], f)
                 dists.append(diff)
@@ -41,6 +45,8 @@ def determine_match(fingerprints):
 
 def cosine_distance(d1, d2):
     """
+    Finds the cosine distance between two arrays.
+    
     Parameters:
     -----------
     d1: np.ndarray
