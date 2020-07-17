@@ -29,8 +29,11 @@ def add_fingerprint(fingerprints, names):
         if name in db:
             #if so, adds fingerprint to list associated with name
             db[name].add(fp)
+            print("name in db")
         #if not, creates a new profile and adds it to the database
         else:
+            print("else")
             prof = Profile([fp])
             db[name] = prof
-    
+            print("completed!")
+    database.save(db)
