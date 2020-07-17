@@ -1,3 +1,7 @@
+"""
+This module contains the implementation of the whispers algorithm and its associated functions
+"""
+
 import numpy as np
 from pathlib import Path
 import random
@@ -22,9 +26,7 @@ def create_graph(folder_path):
     graph : List[Node]
         This is a list of the initialized and filled nodes
     """
-    # graph = []
     
-    # return graph
     pass
     
 def whispers(graph, threshold, max_iterations, weighted_edges):
@@ -50,6 +52,7 @@ def whispers(graph, threshold, max_iterations, weighted_edges):
     -------
     None
     """
+    # TODO Create a windowed average for the convergence check
     # Create the adjacency matrix
     adjacency_matrix = np.zeros((len(graph), len(graph)))
     
@@ -65,9 +68,8 @@ def whispers(graph, threshold, max_iterations, weighted_edges):
 
     # Selecting random node
     # Initializing label counts to be able to detect when convergence occurs (i.e. the number of labels stays the same)
-    # ! Ask about the reason for why we need a maximum number of iterations and which types of graphs will never converge
-    # num_labels_count = len(graph)
-    # past_labels_count = [num_labels_count]
+    num_labels_count = len(graph)
+    past_labels = num_labels_count
 
     # Randomly selecting a node and then updating its label by finding the neighbor with the highest frequency
     for i in max_iterations: # pylint: disable=unused-variable
@@ -100,7 +102,16 @@ def whispers(graph, threshold, max_iterations, weighted_edges):
                 max_freq_index = max_dupl_indices[0]
             
             # Updating the label
-            node.label = graph[node.neighbors[max_freq_index]].label
-            # ! Check this after asking about when graphs never converge
-            # num_labels_count -= 1
+            new_label = graph[node.neighbors[max_freq_index]].label
             
+            # Checking that the number of labels is changing to subtract from the number of labels
+            if new_label != node.label:
+                num_labels_count -= 1
+            
+            node.label = graph[node.neighbors[max_freq_index]].label
+            
+            # Checks that the number of labels isn't the same before
+            if num_labels_count == past_labels:
+                break
+                
+            past_labels = num_labels_count
