@@ -21,7 +21,7 @@ def add_fingerprint(fingerprints, names):
     #retrieves database
     db = database.default()
     #iterates through a range with num of fingerprints - 1
-    for i in range(len(names)-1):
+    for i in range(len(names)):
         #determines name and associated fingerprint
         name = names[i]
         fp = fingerprints[i,:]
