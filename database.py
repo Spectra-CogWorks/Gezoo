@@ -22,7 +22,7 @@ class Profile:
     Parameters
     ----------
     fingerprint: np.ndarray
-      Accepts a size (512,) np.ndarrays to add to the profile
+      Accepts a size (512,) np.ndarray to add to the profile
     """
     self.fingerprints.append(fingerprint)
 
