@@ -16,6 +16,16 @@ class Profile:
     """
     self.fingerprints = fingerprints
 
+  def add(self, fingerprint):
+    """Add a new fingeprint to the database
+
+    Parameters
+    ----------
+    fingerprint: np.ndarray
+      Accepts a size (512,) np.ndarrays to add to the profile
+    """
+    self.fingerprints.append(fingerprint)
+
   @property
   def mean(self):
     """Returns the mean fingerprint
