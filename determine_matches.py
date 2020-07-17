@@ -1,6 +1,6 @@
 import numpy as np
 import database
-fromn database import Profile
+from database import Profile
 
 database = Profile(fingerprints)
 matches = []
