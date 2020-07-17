@@ -1,18 +1,19 @@
 """
-
+The setup file used to configure the command-line interface stored in __init__.py
 """
 
 from setuptools import setup
 
 setup(
-    name='__init__',
+    name='Gezoo',
     version='0.1',
-	py_modules=[''],
+    packages=find_packages(),
+    include_package_data=True,
     install_requires=[
-        'click',
+        'Click',
     ],
     entry_points='''
         [console_scripts]
-        yourscript=yourscript:cli
+        yourscript=yourpackage.scripts.yourscript:cli
     ''',
 )
