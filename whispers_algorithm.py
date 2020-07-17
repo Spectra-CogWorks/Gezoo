@@ -22,6 +22,7 @@ def create_graph(folder_path, threshold):
         The path to a folder containing solely images
         
     threshold : 
+        the maximum distance that determines the edges
     
     Returns
     -------
@@ -47,22 +48,7 @@ def create_graph(folder_path, threshold):
                 if cosine_distances(node1.descriptor, node2.descriptor) < threshold:
                     node1.neighbors.append(node2.ID)
                     
-            
-
-    # lmao why are there so many empty lines
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return list_of_nodes        
 
 
 def whispers(graph, threshold, max_iterations, weighted_edges):
