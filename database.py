@@ -1,6 +1,7 @@
 import pickle
 import numpy as np
 from pathlib import Path
+from copy import deepcopy
 
 _path = Path("./database.pickle")
 _default = None
@@ -91,8 +92,10 @@ def save(database):
   global _default
   global _path
 
-  for name, profile in database.items():
-    database[name] = profile.fingerprints
+  db = deepcopy(database)
+
+  for name, profile in db.items():
+    db[name] = profile.fingerprints
 
   _default = database
 
