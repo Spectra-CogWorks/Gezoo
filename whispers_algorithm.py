@@ -9,8 +9,10 @@ import random
 import node as nd
 import model_wrapper as mw
 from determine_matches import cosine_distance
+import input
+from input import import_folder
 
-def create_graph(folder_path):
+def create_graph(folder_path, threshold):
     """
     Creates a list of nodes, imports images, and fills the nodes with their respective information
     
@@ -19,24 +21,58 @@ def create_graph(folder_path):
     folder_path : str
         The path to a folder containing solely images
         
-    
+    threshold : 
     
     Returns
     -------
     graph : List[Node]
         This is a list of the initialized and filled nodes
     """
+    list_of_nodes = []
     
-    pass
+    imglist = import_folder(folder_path)
+    node_num = 0
     
+    for image in imglist:
+        fingerprints = mw.compute_fingerprints(image, mw.feed_mtcnn(image))
+
+        for face in fingerprints:
+            new_node = Node(node_num, [], face, image=image)
+            list_of_node.append(new_node)
+            node_num += 1
+
+    for node1 in list_of_nodes:
+        for node2 in list_of_nodes:
+            if node1 is not node2:
+                if cosine_distances(node1.descriptor, node2.descriptor) < threshold:
+                    node1.neighbors.append(node2.ID)
+                    
+            
+
+    # lmao why are there so many empty lines
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def whispers(graph, threshold, max_iterations, weighted_edges):
     """
-    Using the graph, creates an adjacency matrix which details a relationship between the nodes, aka "edges".
-    Randomly selects nodes to then decide and updates the graph to identify clusters.
-    
+    Using the graph, creates an adjacency matrix which details a relationship between the nodes, aka "edges". 
+
     Parameters
     ----------
     graph : List[Node]
+ 
         This is a list of all the nodes
         
     threshold : float
