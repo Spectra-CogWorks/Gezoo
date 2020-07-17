@@ -66,4 +66,4 @@ def cosine_distance(d1, d2):
     float
         The cosine distance between the two arrays.
     """
-    return 1 - (np.matmul(d1, d2))/(np.linalg.norm(d1)*np.linalg.norm(d2))
+    return 1 - (np.dot(d1, d2))/(np.linalg.norm(d1)*np.linalg.norm(d2))
