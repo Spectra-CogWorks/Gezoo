@@ -31,7 +31,7 @@ def determine_match(fingerprints, threshold=2):
         for name in db.keys():
             dists = []
             # each name contains multiple fingerprints
-            for f in db[name]:
+            for f in db[name].fingerprints:
                 # takes the cosine distances between input and database fingerprints for this name
                 diff = cosine_distance(fingerprints[i], f)
                 dists.append(diff)
