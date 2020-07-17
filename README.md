@@ -4,7 +4,7 @@ This project uses pre-trained neural networks and an implementation of the whisk
 ### Dependencies
 This project requires the following libraries:
 
-* MyGrad, Noggin, MyNN, NumPy, and Facenet, by running `pip install mygrad noggin facenet-pytorch mynn numpy`
+* MyGrad, Pillow, Click, Noggin, MyNN, NumPy, and Facenet, by running `pip install mygrad noggin facenet-pytorch mynn numpy click pillow`
 
 * OpenCv, which, if using Anaconda, must be installed from the conda-forge channel
 
