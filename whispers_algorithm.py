@@ -69,7 +69,7 @@ def whispers(graph, threshold, max_iterations, weighted_edges):
     # Selecting random node
     # Initializing label counts to be able to detect when convergence occurs (i.e. the number of labels stays the same)
     num_labels_count = len(graph)
-    past_labels_count = [num_labels_count]
+    past_labels = num_labels_count
 
     # Randomly selecting a node and then updating its label by finding the neighbor with the highest frequency
     for i in max_iterations: # pylint: disable=unused-variable
@@ -105,11 +105,13 @@ def whispers(graph, threshold, max_iterations, weighted_edges):
             new_label = graph[node.neighbors[max_freq_index]].label
             
             # Checking that the number of labels is changing to subtract from the number of labels
-            if new_label == node.label:
+            if new_label != node.label:
                 num_labels_count -= 1
             
             node.label = graph[node.neighbors[max_freq_index]].label
             
             # Checks that the number of labels isn't the same before
-            if num_labels_count == past_labels_count:
+            if num_labels_count == past_labels:
                 break
+                
+            past_labels = num_labels_count
