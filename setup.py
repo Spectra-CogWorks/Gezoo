@@ -2,7 +2,7 @@
 The setup file used to configure the command-line interface stored in __init__.py
 """
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='Gezoo',
@@ -10,10 +10,15 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'Click',
+        'click',
+		'pillow',
+		'mygrad'
+		'facenet-pytorch'
+		'mynn'
+		'numpy'
     ],
     entry_points='''
         [console_scripts]
-        yourscript=yourpackage.scripts.yourscript:cli
+        gezoo=Gezoo.__init__:cli
     ''',
 )
