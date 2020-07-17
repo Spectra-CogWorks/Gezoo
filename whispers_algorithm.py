@@ -24,12 +24,6 @@ def create_graph(folder_path):
     """
     # graph = []
     
-    # ? How are we going to decide what to import?
-    # folder = Path(folder_path).glob("**/*.png")
-    
-    # with open() as file:
-        
-    
     # return graph
     pass
     
