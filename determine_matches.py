@@ -5,7 +5,7 @@ from database import Profile
 db = database.default()
 matches = []
 
-def determine_match(fingerprints, threshold):
+def determine_match(fingerprints, threshold=2):
     """
     Determines the best match out of the names in the database for each input fingerprint.
     

@@ -24,17 +24,18 @@ def update():
 @ck.command()
 @ck.argument("filename", help="The path to the image that is to be analyzed")
 @ck.option("-stdt", "--stdthreshold", type=ck.FLOAT, default=2)
-def find_faces(filename, stdthreshold):
+@ck.option("-pt", "--probabilitythreshold", type=, default=0.8)
+def find_faces(filename, stdthreshold, probabilitythreshold):
 	"""Command to find and identify faces in an image, label them with boxes and names from the database, and 
 	display a final image with the aforementioned names and boxes. It labels unknown faces as "Unknown.""""
 	
 	img = inp.import_image(Path(filename))
 	
-	boxes = mw.feed_mtcnn(img) # ! Test for new threshold
+	boxes = mw.feed_mtcnn(img, threshold=probabilitythreshold) # ! Test for new threshold
 	
 	fingerprints = mw.compute_fingerprints(img, boxes)
 	
-	names = dm.determine_match(fingerprints) # ! Test for new threshold
+	names = dm.determine_match(fingerprints, threshold=stdthreshold) # ! Test for new threshold
 	
 	imd.display_image(img, boxes, names)
 	
