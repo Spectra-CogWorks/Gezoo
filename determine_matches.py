@@ -23,21 +23,23 @@ def determine_match(fingerprints):
     # loops over all N fingerprints in the input array
     for i in range(len(fingerprints)):
         name_dists = []
+        just_dists = []
         mean_dists = []
-        for name in db.keys():
+        for name in database.keys():
             dists = []
             # each name contains multiple fingerprints
-            for f in db[name]:
+            for f in database[name]:
                 # takes the cosine distances between input and database fingerprints for this name
                 diff = cosine_distance(fingerprints[i], f)
                 dists.append(diff)
             # computes mean distance and appends it to "name_dists"
             name_dists.append((name, np.mean(dists)))
+            just_dists.append(np.mean(dists))
             # appends mean distance for each name to "mean_dists"
             mean_dists.append(np.mean(dists))
         # appends the name with the lowest mean distance to list "matches" if it falls within 2 stds
-        if (min(name_dists)[1] - np.mean(mean_dists)) <= 2 * np.std(mean_dists):
-            matches.append(min(name_dists)[0])
+        if (min(just_dists) - np.mean(mean_dists)) <= 2 * np.std(mean_dists):
+            matches.append(name_dists[np.argmin(just_dists)][0])
         else:
             matches.append(None)
 
