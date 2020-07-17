@@ -2,6 +2,7 @@ from camera import take_picture
 from PIL import Image
 import numpy as np
 from pathlib import Path
+
 def import_image(file_path):
     """
     Loads a local image and converts it to an ndarray. 
@@ -45,7 +46,7 @@ def import_folder(folder_path):
     folderlist = [folder,folder2,folder3]
     #iterates through the list, converts the images to ndarrays, and appends them to imglist
     for i in folderlist:
-        for j in folder:
+        for j in i:
             img = Image.open(j)
             imglist.append(np.asarray(img))
     #returns imglist
