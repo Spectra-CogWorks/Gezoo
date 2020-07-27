@@ -10,7 +10,7 @@ def import_image(file_path):
     Parameters
     ----------
     file_path : String
-        file path of the image.
+        file path of the image
     
     Returns
     -------

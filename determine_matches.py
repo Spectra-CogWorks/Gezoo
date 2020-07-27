@@ -3,7 +3,7 @@ import database
 from database import Profile
 
 db = database.default()
-matches = []
+
 
 def determine_match(fingerprints, threshold=2):
     """
@@ -23,6 +23,7 @@ def determine_match(fingerprints, threshold=2):
         A list of the names whose fingerprints have the smallest cosine distance
 	to each input/new fingerprint, i.e. are the best matches.
     """
+    matches = []
     # loops over all N fingerprints in the input array
     for i in range(len(fingerprints)):
         name_dists = [] 

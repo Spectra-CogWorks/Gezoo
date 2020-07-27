@@ -50,7 +50,7 @@ def create_graph(folder_path, threshold=1):
     return list_of_nodes        
 
 
-def whispers(graph, threshold=1, max_iterations, weighted_edges):
+def whispers(graph, max_iterations, weighted_edges):
     """
     Using the graph, creates an adjacency matrix which details a relationship between the nodes, aka "edges". 
 
@@ -59,9 +59,6 @@ def whispers(graph, threshold=1, max_iterations, weighted_edges):
     graph : List[Node]
  
         This is a list of all the nodes
-        
-    threshold : float
-        The threshold distance to decide whether two nodes should have an edge
     
     max_iterations : 
         The maximum number of iterations the algorithm should go through before stopping
@@ -98,8 +95,8 @@ def whispers(graph, threshold=1, max_iterations, weighted_edges):
         
         if len(node.neighbors) != 0:
             
-            # Checking all the neighbors for which has the highest frequency
-            frequencies = [] # list of tuples (neighbor_index, freq)
+            # Checking all the neighbors for which one has the highest frequency
+            frequencies = np.array([]) # list of tuples (neighbor_index, freq)
             for neighbor_index, neighbor in enumerate(node.neighbors):
                 frequencies.append((neighbor_index, adjacency_matrix[node.id, neighbor]))
             
@@ -107,6 +104,7 @@ def whispers(graph, threshold=1, max_iterations, weighted_edges):
             frequencies = np.array(frequencies)
             
             # Slice frequencies to find the first max frequency
+            # ! Problems with finding the maximum frequency
             max_freq = np.amax(frequencies[:, 1])
             max_dupl_indices = [] # list of ints
             
@@ -117,9 +115,11 @@ def whispers(graph, threshold=1, max_iterations, weighted_edges):
                     # have the max value
                     max_dupl_indices.append(neighbor_index)
                     
+            # if there are duplicates
             if len(max_dupl_indices) > 1:
                 max_freq_index = random.choice(max_dupl_indices)
             else:
+                # if there are no duplicates
                 max_freq_index = max_dupl_indices[0]
             
             # Updating the label
@@ -129,7 +129,7 @@ def whispers(graph, threshold=1, max_iterations, weighted_edges):
             if new_label != node.label:
                 num_labels_count -= 1
             
-            node.label = graph[node.neighbors[max_freq_index]].label
+            node.label = new_label
             
             # Checks that the number of labels isn't the same before
             if num_labels_count == past_labels:

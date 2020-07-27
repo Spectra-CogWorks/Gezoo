@@ -17,7 +17,6 @@ Plan
 Update the database
 Identify faces in single image
 Use whispers on folder of images
-
 """
 
 @ck.command()
