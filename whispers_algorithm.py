@@ -44,7 +44,7 @@ def create_graph(folder_path, threshold=1):
     for node1 in list_of_nodes:
         for node2 in list_of_nodes:
             if node1 is not node2:
-                if cosine_distances(node1.descriptor, node2.descriptor) < threshold:
+                if cosine_distance(node1.descriptor, node2.descriptor) < threshold:
                     node1.neighbors.append(node2.id)
                     
     return list_of_nodes        
