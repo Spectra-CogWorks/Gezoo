@@ -34,6 +34,7 @@ def determine_match(fingerprints, threshold=2):
             # each name contains multiple fingerprints
             for f in db[name].fingerprints:
                 # takes the cosine distances between input and database fingerprints for this name
+                print(f)
                 diff = cosine_distance(fingerprints[i], f)
                 dists.append(diff)
             # computes mean distance and appends it to "name_dists"
@@ -67,4 +68,4 @@ def cosine_distance(d1, d2):
     float
         The cosine distance between the two arrays.
     """
-    return 1 - (np.dot(d1, d2))/(np.linalg.norm(d1)*np.linalg.norm(d2))
+    return 1 - ((np.dot(d1, d2))/(np.linalg.norm(d1)*np.linalg.norm(d2)))

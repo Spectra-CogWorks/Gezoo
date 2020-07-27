@@ -99,15 +99,13 @@ def whispers(graph, max_iterations, weighted_edges=True):
         if len(node.neighbors) != 0:
             
             # Checking all the neighbors for which one has the highest frequency
-            frequencies = np.array([]) # list of tuples (neighbor_index, freq)
+            frequencies = [] # list of tuples (neighbor_index, freq)
             for neighbor_index, neighbor in enumerate(node.neighbors):
                 frequencies.append((neighbor_index, adjacency_matrix[node.id, neighbor]))
             
-            # Convert list to np.ndarray to allow slicing
             frequencies = np.array(frequencies)
             
             # Slice frequencies to find the first max frequency
-            # ! Problems with finding the maximum frequency
             max_freq = np.amax(frequencies[:, 1])
             max_dupl_indices = [] # list of ints
             
@@ -123,10 +121,11 @@ def whispers(graph, max_iterations, weighted_edges=True):
                 max_freq_index = random.choice(max_dupl_indices)
             else:
                 # if there are no duplicates
+                # ! The problem is here
                 max_freq_index = max_dupl_indices[0]
             
             # Updating the label
-            new_label = graph[node.neighbors[max_freq_index]].label
+            new_label = graph[node.neighbors[int(max_freq_index)]].label
             
             # Checking that the number of labels is changing to subtract from the number of labels
             if new_label != node.label:
