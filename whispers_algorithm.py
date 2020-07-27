@@ -37,7 +37,7 @@ def create_graph(folder_path, threshold=1):
         fingerprints = mw.compute_fingerprints(image, mw.feed_mtcnn(image))
 
         for face in fingerprints:
-            new_node = Node(node_num, [], face, image=image)
+            new_node = nd.Node(node_num, [], face, image=image)
             list_of_node.append(new_node)
             node_num += 1
 
@@ -45,7 +45,7 @@ def create_graph(folder_path, threshold=1):
         for node2 in list_of_nodes:
             if node1 is not node2:
                 if cosine_distances(node1.descriptor, node2.descriptor) < threshold:
-                    node1.neighbors.append(node2.ID)
+                    node1.neighbors.append(node2.id)
                     
     return list_of_nodes        
 
@@ -84,8 +84,8 @@ def whispers(graph, threshold=1, max_iterations, weighted_edges):
         for neighbor in node.neighbors:
             distance = cosine_distance(node.descriptor, graph[neighbor].descriptor)
             
-            adjacency_matrix[node.ID, neighbor] = 1 / (distance ** 2) + 1 if weighted_edges else 1
-            adjacency_matrix[neighbor, node.ID] = 1 / (distance ** 2) + 1 if weighted_edges else 1
+            adjacency_matrix[node.id, neighbor] = 1 / (distance ** 2) + 1 if weighted_edges else 1
+            adjacency_matrix[neighbor, node.id] = 1 / (distance ** 2) + 1 if weighted_edges else 1
 
     # Selecting random node
     # Initializing label counts to be able to detect when convergence occurs (i.e. the number of labels stays the same)
@@ -93,7 +93,7 @@ def whispers(graph, threshold=1, max_iterations, weighted_edges):
     past_labels = num_labels_count
 
     # Randomly selecting a node and then updating its label by finding the neighbor with the highest frequency
-    for i in max_iterations: # pylint: disable=unused-variable
+    for i in range(max_iterations): # pylint: disable=unused-variable
         node = random.choice(graph)
         
         if len(node.neighbors) != 0:
@@ -101,7 +101,7 @@ def whispers(graph, threshold=1, max_iterations, weighted_edges):
             # Checking all the neighbors for which has the highest frequency
             frequencies = [] # list of tuples (neighbor_index, freq)
             for neighbor_index, neighbor in enumerate(node.neighbors):
-                frequencies.append((neighbor_index, adjacency_matrix[node.ID, neighbor]))
+                frequencies.append((neighbor_index, adjacency_matrix[node.id, neighbor]))
             
             # Convert list to np.ndarray to allow slicing
             frequencies = np.array(frequencies)
