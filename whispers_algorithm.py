@@ -38,7 +38,7 @@ def create_graph(folder_path, threshold=1):
 
         for face in fingerprints:
             new_node = nd.Node(node_num, [], face, image=image)
-            list_of_node.append(new_node)
+            list_of_nodes.append(new_node)
             node_num += 1
 
     for node1 in list_of_nodes:
@@ -50,7 +50,7 @@ def create_graph(folder_path, threshold=1):
     return list_of_nodes        
 
 
-def whispers(graph, max_iterations, weighted_edges):
+def whispers(graph, max_iterations, weighted_edges=True):
     """
     Using the graph, creates an adjacency matrix which details a relationship between the nodes, aka "edges". 
 
