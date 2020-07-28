@@ -45,18 +45,12 @@ def determine_matches(fingerprints, threshold=2):
             mean_dists.append(np.mean(dists))
 
         # appends the name with the lowest mean distance to list "matches" if it falls within 2 stds
-        if len(mean_dists) == 1:
-            if np.mean(mean_dists) <= threshold:
-                matches.append(name_dists[np.argmin(mean_dists)])
-            else:
-                matches.append("Unknown")
+        print(mean_dists)
+        print(np.std(mean_dists))
+        if np.min(mean_dists) <= threshold:
+            matches.append(name_dists[np.argmin(mean_dists)])
         else:
-            if np.abs(np.min(mean_dists) - np.mean(mean_dists)) <= threshold * np.std(
-                mean_dists
-            ):
-                matches.append(name_dists[np.argmin(mean_dists)])
-            else:
-                matches.append("Unknown")
+            matches.append("Unknown")
 
     db.save()
 
