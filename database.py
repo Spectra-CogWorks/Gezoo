@@ -2,101 +2,112 @@ import pickle
 import numpy as np
 from pathlib import Path
 from copy import deepcopy
+import model_wrapper as mw
 
-_path = Path("./database.pickle")
-_default = None
+class Database:
+    def __init__(self, importVal=True, path="./database.pickle"):
+        """Initialize a database, either fresh or imported
+		
+		Parameters
+		----------
+		import : boolean = True
+			Choose whether there would should be a fresh dictionary or imported from a file
+			
+		path : str
+			A path to the database path
+		"""
+        if importVal:
+            self.database = pickle.load(open(path, "rb"))
+        else:
+            self.database = {}
 
-class Profile:
-  def __init__(self, fingerprints):
-    """Initialize a profile based on a list of fingerprints
+    def save(self, datab, path="./database.pickle"):
+        """Saves a database returned from default
 
-    Parameters
-    ----------
-    fingerprints: List[np.ndarray]
-      Accepts a list of size (512,) np.ndarrays to initialize the profile
-    """
-    self.fingerprints = fingerprints
+		Parameters
+		-------
+		database: Dict{str : Profile]
+			Single database instance containing profiles.
+			
+		path : str
+			The path of the database
+		"""
+        datab = deepcopy(datab)
+        pickle.dump(datab, open(path, "wb"))
 
-  def add(self, fingerprint):
-    """Add a new fingeprint to the database
+    def load(self, path="./database.pickle"):
+        """Loads a database
 
-    Parameters
-    ----------
-    fingerprint: np.ndarray
-      Accepts a size (512,) np.ndarray to add to the profile
-    """
-    self.fingerprints.append(fingerprint)
+		Parameters
+		-------
+		path : str
+			The path of the database
+		
+		Returns
+		-------
+		database : Dict{str : Profile}
+		"""
+        return pickle.load(open(path, "rb"))
 
-  @property
-  def mean(self):
-    """Returns the mean fingerprint
+    def add(self, name, fingerprint):
+        """Adds a fingerprint to a specific database entry
+		
+		Parameters
+		----------
+		name : str
+			The name key of the entry
+			
+		fingerprint : np.ndarray - shape(512,)
+			The fingerprint being added to the database
+		"""
+        if name not in self.database:
+            self.database[name] = [fingerprint]
+        else:
+            self.database[name].append(fingerprint)
 
-    Returns
-    -------
-    fingerprint: np.ndarray
-      A size (512,) np.ndarray representing the mean fingerprint
-    """
-    return np.mean(self.fingerprints, axis=0)
+    def add_multi(self, name, fingerprints):
+        """Adds a fingerprint to a specific database entry
+		
+		Parameters
+		----------
+		name : str
+			The name key of the entry
+			
+		fingerprints : List[np.ndarray - shape(512,)]
+			The fingerprints being added to the database
+		"""
+        if name not in self.database:
+            self.database[name] = fingerprints
+        else:
+            for fingerprint in fingerprints:
+                self.database[name].append(fingerprint)
 
-  @property
-  def stddev(self):
-    """Returns the standard deviation fingerprint
+    def get_fingerprints(self, name):
+        """The fingerprints are returned for a specific name
+		
+		Parameters
+		----------
+		name : str
+			The key of the database
+			
+		Returns
+		-------
+		self.database[name] : List[np.ndarray - shape(512,)]
+		"""
+        return self.database[name]
 
-    Returns
-    -------
-    fingerprint: np.ndarray
-      A size (512,) np.ndarray representing the standard deviation fingerprint
-    """
-    return np.std(self.fingerprints, axis=0)
+    @classmethod
+    def compute_fingerprint_from_image(cls, img):
+        """Compute a fingerprint from an image
+		
+		Parameters
+		----------
+		img : np.ndarray
+			An image
+			
+		Returns
+		-------
+		fingerprints : np.ndarray - shape(512,)
+		"""
+        return mw.compute_fingerprints(img, mw.feed_mtcnn(img))
 
-def set_path(path):
-  """Sets path to be used to load the database.
-
-  Parameters
-  ----------
-  path: Path
-    Path to load database from.
-  """
-  global _path
-  _path = path  
-
-def default():
-  """Returns the database of profiles.
-
-  Returns
-  -------
-  database: Dict[str, Profile]
-    Single database instance containing profiles.
-  """
-  global _default
-  global _path
-
-  if _default:
-    return _default
-  else:
-    _default = pickle.load(open(_path, "rb"))
-
-    for name, fingerprints in enumerate(_default):
-      _default[name] = Profile(fingerprints)
-
-    return _default
-
-def save(database):
-  """Saves a database returned from default
-
-  Parameters
-  -------
-  database: Dict[str, Profile]
-    Single database instance containing profiles.
-  """
-  global _default
-  global _path
-
-  db = deepcopy(database)
-
-  for name, profile in db.items():
-    db[name] = profile.fingerprints
-
-  _default = database
-
-  pickle.dump(_default, open(_path, "wb"))

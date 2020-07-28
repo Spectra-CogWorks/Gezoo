@@ -1,42 +1,43 @@
 import numpy as np
-import database
-from database import Profile
-
-db = database.default()
+from database import Database  # pylint: disable=import-error
 
 
-def determine_match(fingerprints, threshold=2):
+def determine_matches(fingerprints, threshold=0.5):
     """
     Determines the best match out of the names in the database for each input fingerprint.
-    
+
     Parameter:
     -----------
     fingerprints: np.ndarray
         A shape-(N, 512) array of fingerprints (or descriptor vectors) taken from N images.
-        
+
     threshold : float
         The threshold value for standard deviations
-        	
+
     Returns:
     --------
-    matches: list
+    matches: List[str]
         A list of the names whose fingerprints have the smallest cosine distance
 	to each input/new fingerprint, i.e. are the best matches.
     """
+    db = Database()
     matches = []
-    # loops over all N fingerprints in the input array
-    for i in range(len(fingerprints)):
-        name_dists = [] 
+
+    # Loops over all N fingerprints in the input array
+    for i in range(fingerprints.shape[0]):
+        name_dists = []
         mean_dists = []
-        print (db.keys())
-        for name in db.keys():
+
+        for name in db.database.keys():
             dists = []
-            # each name contains multiple fingerprints
-            for f in db[name].fingerprints:
-                # takes the cosine distances between input and database fingerprints for this name
-                print(f)
-                diff = cosine_distance(fingerprints[i], f)
+
+            # Each name contains multiple fingerprints
+            for f in db.get_fingerprints(name):
+                # Takes the cosine distances between input and database fingerprints for this name
+                diff = cosine_distance(fingerprints[i].reshape((512)), f.reshape((512)))
+
                 dists.append(diff)
+
             # computes mean distance and appends it to "name_dists"
             name_dists.append((name, np.mean(dists)))
 
@@ -44,12 +45,15 @@ def determine_match(fingerprints, threshold=2):
             mean_dists.append(np.mean(dists))
 
         # appends the name with the lowest mean distance to list "matches" if it falls within 2 stds
-        if (min(mean_dists) - np.mean(mean_dists)) <= threshold * np.std(mean_dists):
+        if np.abs(np.min(mean_dists) - np.mean(mean_dists)) <= threshold * np.std(
+            mean_dists
+        ):
             matches.append(name_dists[np.argmin(mean_dists)][0])
         else:
-            matches.append(None)
+            matches.append("Unknown")
 
     return matches
+
 
 def cosine_distance(d1, d2):
     """
@@ -68,4 +72,4 @@ def cosine_distance(d1, d2):
     float
         The cosine distance between the two arrays.
     """
-    return 1 - ((np.dot(d1, d2))/(np.linalg.norm(d1)*np.linalg.norm(d2)))
+    return 1 - ((np.dot(d1, d2)) / (np.linalg.norm(d1) * np.linalg.norm(d2)))
