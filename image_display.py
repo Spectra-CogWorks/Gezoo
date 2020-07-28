@@ -2,31 +2,55 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Rectangle
 
-def display_image(imgarray, boxes, names):
+
+def display_image(image, boxes=None, names=None, fontsize=20):
     """
     Displays an image of people. These people have boxes surrounding them
     and their names depicted next to them.
 
     Parameters
     ----------
-    imgarray : np.ndarray, shape=(H, W, C)
+    image : np.ndarray, shape=(H, W, C)
         The np.array that holds the image data. Where H is the height of the pic, W is the width, and C is the color channels.
-    boxes : np.ndarray, shape=(B, 4)
-        Np.ndarray where the corner coodinates are stored as xyxy and each row is a different box.
-    names : List[String]
-        Contains the names that correspond to each box.
-
+        
+    boxes : np.ndarray, shape(N, 4)
+        The boxes around the faces
+        
+    name : List[str]
+        An optional argument to add corresponding names
+        
+    fontsize : int
+        An optional argument to adjust fontsize
+        
     Returns
     -------
     None
     """
+    # Divider
+    if boxes is not None:
+        fig, ax = plt.subplots()  # pylint: disable=unused-variable
+        ax.imshow(image)
 
-    fig, ax = plt.subplots() # pylint: disable=unused-variable
-    ax.imshow(imgarray)
+        for i in range(len(boxes)):
+            ax.add_patch(
+                Rectangle(
+                    xy=(boxes[i][0], boxes[i][1]),
+                    height=boxes[i][3] - boxes[i][1],
+                    width=boxes[i][2] - boxes[i][0],
+                    fill=None,
+                    lw=2,
+                    color="red",
+                )
+            )
 
-    for box, name in zip(boxes, names):
-        ax.add_patch(Rectangle(box[:2], *(box[2:] - box[:2]), fill=None, lw=2, color="red"))
-        plt.text(box[0], box[1], name, fontsize=28, color="green")
-        
-    plt.show(block=True)
-    
+            if names is not None:
+                plt.text(
+                    boxes[i][0], boxes[i][1], names[i], fontsize=fontsize, color="green"
+                )
+
+        plt.show(block=True)
+    else:
+        fig, ax = plt.subplots()  # pylint: disable=unused-variable
+        ax.imshow(image)
+
+        plt.show(block=True)

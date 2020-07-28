@@ -27,6 +27,9 @@ def feed_mtcnn(image, threshold=0.8):
   boxes = boxes[[
     i for i in range(probabilities.size) if probabilities[i] > threshold
   ]]
+  
+  for box in boxes:
+    box.reshape(4)
 
   return boxes
 

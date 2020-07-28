@@ -2,7 +2,7 @@ import numpy as np
 from database import Database  # pylint: disable=import-error
 
 
-def determine_matches(fingerprints, threshold=0.5):
+def determine_matches(fingerprints, threshold=2):
     """
     Determines the best match out of the names in the database for each input fingerprint.
 
@@ -18,7 +18,7 @@ def determine_matches(fingerprints, threshold=0.5):
     --------
     matches: List[str]
         A list of the names whose fingerprints have the smallest cosine distance
-	to each input/new fingerprint, i.e. are the best matches.
+    to each input/new fingerprint, i.e. are the best matches.
     """
     db = Database()
     matches = []
@@ -39,18 +39,26 @@ def determine_matches(fingerprints, threshold=0.5):
                 dists.append(diff)
 
             # computes mean distance and appends it to "name_dists"
-            name_dists.append((name, np.mean(dists)))
+            name_dists.append(name)
 
             # appends mean distance for each name to "mean_dists"
             mean_dists.append(np.mean(dists))
 
         # appends the name with the lowest mean distance to list "matches" if it falls within 2 stds
-        if np.abs(np.min(mean_dists) - np.mean(mean_dists)) <= threshold * np.std(
-            mean_dists
-        ):
-            matches.append(name_dists[np.argmin(mean_dists)][0])
+        if len(mean_dists) == 1:
+            if np.mean(mean_dists) <= threshold:
+                matches.append(name_dists[np.argmin(mean_dists)])
+            else:
+                matches.append("Unknown")
         else:
-            matches.append("Unknown")
+            if np.abs(np.min(mean_dists) - np.mean(mean_dists)) <= threshold * np.std(
+                mean_dists
+            ):
+                matches.append(name_dists[np.argmin(mean_dists)])
+            else:
+                matches.append("Unknown")
+
+    db.save()
 
     return matches
 
@@ -62,11 +70,11 @@ def cosine_distance(d1, d2):
     Parameters:
     -----------
     d1: np.ndarray
-	One of the two arrays you are finding the distance between.
+    One of the two arrays you are finding the distance between.
     
     d2: np.ndarray
         The second of the two arrays you are finding the distance between.
-        	
+            
     Returns:
     --------
     float
