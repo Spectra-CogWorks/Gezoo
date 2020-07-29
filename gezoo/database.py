@@ -2,11 +2,11 @@ import pickle
 import numpy as np
 from pathlib import Path
 from copy import deepcopy
-from . import model_wrapper as mw
+import model_wrapper as mw
 
 
 class Database:
-    def __init__(self, importVal=True, path="./database.pickle"):
+    def __init__(self, importVal=True, path="./database.pkl"):
         """Initialize a database, either fresh or imported
         
         Parameters
@@ -22,7 +22,7 @@ class Database:
         else:
             self.database = {}
 
-    def save(self, path="./database.pickle"):
+    def save(self, path="./database.pkl"):
         """Saves a database returned from default
 
         Parameters
@@ -38,7 +38,7 @@ class Database:
         with open(path, mode="wb") as opened_file:
             pickle.dump(datab, opened_file)
 
-    def load(self, path="./database.pickle"):
+    def load(self, path="./database.pkl"):
         """Loads a database
 
         Parameters

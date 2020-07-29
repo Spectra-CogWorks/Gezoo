@@ -22,7 +22,7 @@ def import_image(file_path):
     path = Path(file_path)
     img = Image.open(path)
     # converts Image object to ndarray
-    return np.asarray(img)[:, :, :3]
+    return np.asarray(img)
 
 
 def import_folder(folder_path, return_img_paths=False):
