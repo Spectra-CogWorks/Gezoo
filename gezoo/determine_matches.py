@@ -1,5 +1,5 @@
 import numpy as np
-from database import Database  # pylint: disable=import-error
+from .database import Database  # pylint: disable=import-error
 
 
 def determine_matches(fingerprints, threshold=2):

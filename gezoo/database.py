@@ -2,7 +2,7 @@ import pickle
 import numpy as np
 from pathlib import Path
 from copy import deepcopy
-import model_wrapper as mw
+from . import model_wrapper as mw
 
 
 class Database:

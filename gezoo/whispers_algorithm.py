@@ -6,9 +6,9 @@ import numpy as np
 from pathlib import Path
 import random
 
-import node as nd
-import model_wrapper as mw
-from determine_matches import cosine_distance
+from . import node as nd
+from . import model_wrapper as mw
+from .determine_matches import cosine_distance
 from camera_input import import_folder
 
 def create_graph(folder_path, threshold=1):

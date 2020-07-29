@@ -1,3 +1,8 @@
+import networkx as nx #pylint: disable=import-error
+import numpy as np
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+
 class Node:
     """ Describes a node in a graph, and the edges connected
         to that node."""
@@ -62,11 +67,6 @@ def plot_graph(graph, adj):
     -------
     Tuple[matplotlib.fig.Fig, matplotlib.axis.Axes]
         The figure and axes for the plot."""
-    import networkx as nx
-    import numpy as np
-    import matplotlib.cm as cm
-    import matplotlib.pyplot as plt
-
     g = nx.Graph()
     for n, node in enumerate(graph): # pylint: disable=unused-variable
         g.add_node(n)
@@ -93,5 +93,5 @@ def plot_graph(graph, adj):
     fig, ax = plt.subplots()
     nx.draw_networkx_nodes(g, pos=pos, ax=ax, nodelist=range(len(graph)), node_color=colors)
     nx.draw_networkx_edges(g, pos, ax=ax, edgelist=g.edges())
-    plt.show()
+    plt.show(block=True)
     return fig, ax
