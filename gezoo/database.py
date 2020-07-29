@@ -82,8 +82,7 @@ class Database:
         if name not in self.database:
             self.database[name] = fingerprints
         else:
-            for fingerprint in fingerprints:
-                self.database[name].append(fingerprint)
+            self.database[name].extend(fingerprints)
 
     def get_fingerprints(self, name):
         """The fingerprints are returned for a specific name

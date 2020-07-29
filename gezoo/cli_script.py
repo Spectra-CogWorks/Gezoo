@@ -18,8 +18,16 @@ def cli():
 
 
 @cli.command()
-def test():
-    ck.echo("Intense Success")
+def peek():
+    db = Database()
+    ck.echo(db.database)
+    
+    
+@cli.command()
+def clear():
+    db = Database(importVal=False)
+    db.save()
+    ck.echo("Database Cleared!")
 
 
 @cli.command()
@@ -31,6 +39,7 @@ def test():
     "--probabilitythreshold",
     help="The threshold for when faces are identified",
     type=ck.FLOAT,
+    default=0.8,
 )
 def add_file_to_database(name, filepath, probabilitythreshold, dbpath):
     db = Database()
@@ -41,7 +50,7 @@ def add_file_to_database(name, filepath, probabilitythreshold, dbpath):
         img, mw.feed_mtcnn(img, threshold=probabilitythreshold)
     )
 
-    db.add_multi(name, fingerprints)
+    db.add_multi(name, list(fingerprints))
     db.save()
 
 
@@ -62,7 +71,7 @@ def add_pic_to_database(name, probabilitythreshold, dbpath):
         img, mw.feed_mtcnn(img, threshold=probabilitythreshold)
     )
 
-    db.add_multi(name, fingerprints)
+    db.add_multi(name, list(fingerprints))
     db.save()
 
 
