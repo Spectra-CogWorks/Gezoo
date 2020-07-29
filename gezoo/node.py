@@ -1,5 +1,6 @@
 import networkx as nx #pylint: disable=import-error
 import numpy as np
+from pathlib import Path
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
@@ -7,7 +8,7 @@ class Node:
     """ Describes a node in a graph, and the edges connected
         to that node."""
 
-    def __init__(self, ID, neighbors, descriptor, truth=None, image=None):
+    def __init__(self, ID, neighbors, descriptor, truth=None, image=None, image_path=None):
         """ 
         Parameters
         ----------
@@ -46,6 +47,7 @@ class Node:
 
         self.truth = truth
         self.image = image
+        self.image_path = Path(image_path)
 
 
 def plot_graph(graph, adj):

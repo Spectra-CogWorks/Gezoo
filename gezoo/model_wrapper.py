@@ -22,7 +22,7 @@ def feed_mtcnn(image, threshold=0.8):
   # ! Please test to find a new threshold value
   global _model
 
-  boxes, probabilities, _ = _model.detect(image)
+  boxes, probabilities, _ = _model.detect(image[..., :3])
 
   boxes = boxes[[
     i for i in range(probabilities.size) if probabilities[i] > threshold
@@ -49,4 +49,4 @@ def compute_fingerprints(image, boxes):
   fingeprints: np.ndarray
     Fingerprints in np.ndarray of shape (N, 512)
   """
-  return _model.compute_descriptors(image, boxes)
+  return _model.compute_descriptors(image[..., :3], boxes)

@@ -25,7 +25,7 @@ def import_image(file_path):
     return np.asarray(img)[:, :, :3]
 
 
-def import_folder(folder_path):
+def import_folder(folder_path, return_img_paths=False):
     """
     Loads all the .png, .jpg, and .jpeg files in a local folder and converts them to a list of ndarrays. 
     
@@ -46,10 +46,11 @@ def import_folder(folder_path):
     folder2 = Path(folder_path).glob("**/*.png")
     folder3 = Path(folder_path).glob("**/*.jpeg")
     folderlist = [folder, folder2, folder3]
+    
     # iterates through the list, converts the images to ndarrays, and appends them to imglist
     for i in folderlist:
         for j in i:
             img = Image.open(j)
-            imglist.append(np.asarray(img))
+            imglist.append((np.asarray(img), j))
     # returns imglist
     return imglist

@@ -54,3 +54,5 @@ def display_image(image, boxes=None, names=None, fontsize=20):
         ax.imshow(image)
 
         plt.show(block=True)
+        
+    return fig, ax

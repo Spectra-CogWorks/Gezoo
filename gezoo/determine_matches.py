@@ -2,7 +2,7 @@ import numpy as np
 from .database import Database  # pylint: disable=import-error
 
 
-def determine_matches(fingerprints, threshold=2):
+def determine_matches(fingerprints, threshold=0.6):
     """
     Determines the best match out of the names in the database for each input fingerprint.
 

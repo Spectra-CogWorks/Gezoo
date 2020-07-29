@@ -21,8 +21,8 @@ def cli():
 def peek():
     db = Database()
     ck.echo(db.database)
-    
-    
+
+
 @cli.command()
 def clear():
     db = Database(importVal=False)
@@ -55,12 +55,14 @@ def add_file_to_database(name, filepath, probabilitythreshold, dbpath):
 
 
 @cli.command()
+@ck.argument("name")
 @ck.option("-d", "--dbpath", help="Path to database")
 @ck.option(
     "-p",
     "--probabilitythreshold",
     help="The threshold for when faces are identified",
     type=ck.FLOAT,
+    default=0.8,
 )
 def add_pic_to_database(name, probabilitythreshold, dbpath):
     db = Database()
@@ -77,7 +79,7 @@ def add_pic_to_database(name, probabilitythreshold, dbpath):
 
 @cli.command()
 @ck.argument("filename")
-@ck.option("-t", "--threshold", type=ck.FLOAT, default=2.0)
+@ck.option("-t", "--threshold", type=ck.FLOAT, default=0.6)
 @ck.option("-p", "--probabilitythreshold", type=ck.FLOAT, default=0.8)
 @ck.option("-d", "--dbpath", help="Path to database")
 def find_faces(filename, threshold, probabilitythreshold, dbpath):
@@ -101,10 +103,8 @@ def find_faces(filename, threshold, probabilitythreshold, dbpath):
 @ck.option("-w", "--weightededges", type=ck.BOOL, default=True)
 def whispers(foldername, threshold, maxiterations, weightededges):
     """Runs the whispers algorithm on a folder of images and graphs the final graph once it is complete"""
-    graph = whisp.create_graph(foldername, threshold=threshold)
-
-    adjacency_matrix = whisp.whispers(
-        graph, max_iterations=maxiterations, weighted_edges=weightededges
+    graph, adjacency_matrix = whisp.run_whispers(
+        foldername, threshold, maxiterations, weightededges
     )
 
     nd.plot_graph(graph, adjacency_matrix)
