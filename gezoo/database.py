@@ -2,7 +2,8 @@ import pickle
 import numpy as np
 from pathlib import Path
 from copy import deepcopy
-import model_wrapper as mw
+
+from . import model_wrapper as mw
 
 
 class Database:
@@ -112,4 +113,3 @@ class Database:
         fingerprints : np.ndarray - shape(512,)
         """
         return mw.compute_fingerprints(img, mw.feed_mtcnn(img))
-

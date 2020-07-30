@@ -52,5 +52,6 @@ def import_folder(folder_path, return_img_paths=False):
         for j in i:
             img = Image.open(j)
             imglist.append((np.asarray(img), j))
+    
     # returns imglist
     return imglist

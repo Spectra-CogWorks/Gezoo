@@ -28,6 +28,10 @@ def determine_matches(fingerprints, threshold=0.6):
         name_dists = []
         mean_dists = []
 
+        if db.database == {}:
+            matches.append("Unknown")
+            continue
+
         for name in db.database.keys():
             dists = []
 

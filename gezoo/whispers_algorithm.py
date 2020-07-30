@@ -12,7 +12,7 @@ from .determine_matches import cosine_distance
 from .camera_input import import_folder
 
 
-def create_graph(folder_path, threshold=0.2):
+def create_graph(folder_path, threshold=0.5):
     """
     Creates a list of nodes, imports images, and fills the nodes with their respective information
     
@@ -37,16 +37,36 @@ def create_graph(folder_path, threshold=0.2):
     for image, image_path in imglist:
         fingerprints = mw.compute_fingerprints(image, mw.feed_mtcnn(image))
 
-        for face in fingerprints:
-            new_node = nd.Node(node_num, [], face, image=image, image_path=image_path)
+        # Check that only one fingerprint was returned, otherwise mark the node as unclassified
+        if fingerprints.shape[0] == 1:
+            new_node = nd.Node(
+                node_num, [], fingerprints, image=image, image_path=image_path
+            )
+            list_of_nodes.append(new_node)
+            node_num += 1
+        else:
+            new_node = nd.Node(
+                node_num, [], np.array([]), image_path=image_path, unclassified=True
+            )
             list_of_nodes.append(new_node)
             node_num += 1
 
     for node1 in list_of_nodes:
+        if node1.unclassified:
+            continue
+
         node1_neighbors = []
         for node2 in list_of_nodes:
+            if node2.unclassified:
+                continue
+
             if node1 is not node2:
-                if cosine_distance(node1.descriptor, node2.descriptor) < threshold:
+                if (
+                    cosine_distance(
+                        node1.descriptor.reshape(512), node2.descriptor.reshape(512)
+                    )
+                    < threshold
+                ):
                     node1_neighbors.append(node2.id)
 
         node1.neighbors = tuple(node1_neighbors)
@@ -54,7 +74,7 @@ def create_graph(folder_path, threshold=0.2):
     return list_of_nodes
 
 
-def whispers(graph, max_iterations=200, weighted_edges=True):
+def whispers(graph, max_iterations=500, weighted_edges=True):
     """
     Using the graph, creates an adjacency matrix which details a relationship between the nodes, aka "edges". 
 
@@ -81,8 +101,13 @@ def whispers(graph, max_iterations=200, weighted_edges=True):
     # Populate the adjacency matrix
     # If weighted edges is enabled, the matrix will contain values in [0, infinity) instead of [0, 1]
     for node in graph:
+        if node.unclassified:
+            continue
+
         for neighbor in node.neighbors:
-            distance = cosine_distance(node.descriptor, graph[neighbor].descriptor)
+            distance = cosine_distance(
+                node.descriptor.reshape(512), graph[neighbor].descriptor.reshape(512)
+            )
 
             adjacency_matrix[node.id, neighbor] = (
                 1 / (distance ** 2) + 1 if weighted_edges else 1
@@ -99,6 +124,9 @@ def whispers(graph, max_iterations=200, weighted_edges=True):
     # Randomly selecting a node and then updating its label by finding the neighbor with the highest frequency
     for i in range(max_iterations):  # pylint: disable=unused-variable
         node = random.choice(graph)
+
+        if node.unclassified:
+            continue
 
         if len(node.neighbors) != 0:
 
@@ -148,7 +176,7 @@ def whispers(graph, max_iterations=200, weighted_edges=True):
     return adjacency_matrix
 
 
-def run_whispers(folder_path, threshold=0.2, max_iterations=200, weighted_edges=True):
+def run_whispers(folder_path, threshold=0.5, max_iterations=200, weighted_edges=True):
     """Uses the create_graph() and whispers() functions to organize a folder of images into subfolders
     
     Parameters
@@ -177,12 +205,21 @@ def run_whispers(folder_path, threshold=0.2, max_iterations=200, weighted_edges=
     folder_path = Path(folder_path)
 
     for node in graph:
-        labels.append(node.image_path)
+        if node.unclassified:
+            continue
+
+        if node.label not in labels:
+            labels.append(node.label)
 
     for label in labels:
         (folder_path / str(label)).mkdir()
 
+    (folder_path / "Unclassified").mkdir()
+
     for node in graph:
-        node.image_path.rename(folder_path / str(node.label) / node.image_path.name)
+        if node.unclassified:
+            node.image_path.rename(folder_path / "Unclassified" / node.image_path.name)
+        else:
+            node.image_path.rename(folder_path / str(node.label) / node.image_path.name)
 
     return graph, adj

@@ -98,13 +98,13 @@ def find_faces(filename, threshold, probabilitythreshold, dbpath):
 
 @cli.command()
 @ck.argument("foldername")
-@ck.option("-t", "--threshold", type=ck.FLOAT, default=1)
-@ck.option("-m", "--maxiterations", type=ck.INT, default=200)
+@ck.option("-t", "--threshold", type=ck.FLOAT, default=0.8)
+@ck.option("-m", "--maxiterations", type=ck.INT, default=500)
 @ck.option("-w", "--weightededges", type=ck.BOOL, default=True)
 def whispers(foldername, threshold, maxiterations, weightededges):
     """Runs the whispers algorithm on a folder of images and graphs the final graph once it is complete"""
     graph, adjacency_matrix = whisp.run_whispers(
-        foldername, threshold, maxiterations, weightededges
+       foldername, threshold, maxiterations, weightededges
     )
 
     nd.plot_graph(graph, adjacency_matrix)

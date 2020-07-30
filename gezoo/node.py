@@ -1,14 +1,24 @@
-import networkx as nx #pylint: disable=import-error
+import networkx as nx  # pylint: disable=import-error
 import numpy as np
 from pathlib import Path
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
+
 class Node:
     """ Describes a node in a graph, and the edges connected
         to that node."""
 
-    def __init__(self, ID, neighbors, descriptor, truth=None, image=None, image_path=None):
+    def __init__(
+        self,
+        ID,
+        neighbors,
+        descriptor,
+        truth=None,
+        image=None,
+        image_path=None,
+        unclassified=False,
+    ):
         """ 
         Parameters
         ----------
@@ -48,6 +58,7 @@ class Node:
         self.truth = truth
         self.image = image
         self.image_path = Path(image_path)
+        self.unclassified = unclassified
 
 
 def plot_graph(graph, adj):
@@ -69,12 +80,16 @@ def plot_graph(graph, adj):
     -------
     Tuple[matplotlib.fig.Fig, matplotlib.axis.Axes]
         The figure and axes for the plot."""
+    for node in graph:
+        if node.unclassified:
+            graph.remove(node)
+
     g = nx.Graph()
-    for n, node in enumerate(graph): # pylint: disable=unused-variable
+    for n, node in enumerate(graph):  # pylint: disable=unused-variable
         g.add_node(n)
 
     # construct a network-x graph from the adjacency matrix: a non-zero entry at adj[i, j]
-    # indicates that an egde is present between Node-i and Node-j. Because the edges are 
+    # indicates that an egde is present between Node-i and Node-j. Because the edges are
     # undirected, the adjacency matrix must be symmetric, thus we only look ate the triangular
     # upper-half of the entries to avoid adding redundant nodes/edges
     g.add_edges_from(zip(*np.where(np.triu(adj) > 0)))
@@ -83,17 +98,25 @@ def plot_graph(graph, adj):
     # we treat each node as a point in 2D space, and edges like compressed springs. We simulate
     # all of these springs decompressing (relaxing) to naturally space out the nodes of the graph
     # this will hopefully give us a sensible (x, y) for each node, so that our graph is given
-    # a reasonable visual depiction 
+    # a reasonable visual depiction
     pos = nx.spring_layout(g)
 
     # make a mapping that maps: node-lab -> color, for each unique label in the graph
-    color = list(iter(cm.tab20b(np.linspace(0, 1, len(set(i.label for i in graph)))))) # pylint: disable=no-member
+    color = list(
+        iter(
+            cm.tab20b(np.linspace(0, 1, len(set(i.label for i in graph))))# pylint: disable=no-member
+        )  
+    ) 
     color_map = dict(zip(sorted(set(i.label for i in graph)), color))
-    colors = [color_map[i.label] for i in graph]  # the color for each node in the graph, according to the node's label
+    colors = [
+        color_map[i.label] for i in graph
+    ]  # the color for each node in the graph, according to the node's label
 
     # render the visualization of the graph, with the nodes colored based on their labels!
     fig, ax = plt.subplots()
-    nx.draw_networkx_nodes(g, pos=pos, ax=ax, nodelist=range(len(graph)), node_color=colors)
+    nx.draw_networkx_nodes(
+        g, pos=pos, ax=ax, nodelist=range(len(graph)), node_color=colors
+    )
     nx.draw_networkx_edges(g, pos, ax=ax, edgelist=g.edges())
     plt.show(block=True)
     return fig, ax
